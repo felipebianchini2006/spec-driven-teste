@@ -1,0 +1,490 @@
+openapi: 3.0.3
+info:
+  title: Estante Virtual API
+  description: |
+    API REST para gerenciamento de catálogo pessoal de livros e avaliações.
+    
+    **MVP Features:**
+    - Adicionar livros com título, autor e URL de capa opcional
+    - Listar todos os livros cadastrados
+    - Ver detalhes de um livro específico
+    - Adicionar/editar avaliação (nota 1-5 e resenha) para um livro
+    
+    **Constitution Compliance:**
+    - RESTful design (HTTP verbs, status codes, resource naming)
+    - Stateless API
+    - EF Core + PostgreSQL backend
+    - Blazor Server frontend consome esta API via HttpClient
+  version: 1.0.0
+  contact:
+    name: Estante Virtual Team
+    
+servers:
+  - url: https://localhost:7001/api
+    description: Development server (HTTPS)
+  - url: http://localhost:5000/api
+    description: Development server (HTTP)
+
+tags:
+  - name: Books
+    description: Operações relacionadas a livros
+  - name: Reviews
+    description: Operações relacionadas a avaliações de livros
+
+paths:
+  /books:
+    get:
+      tags:
+        - Books
+      summary: Listar todos os livros
+      description: Retorna lista completa de livros cadastrados na estante, incluindo suas avaliações se existirem
+      operationId: getAllBooks
+      responses:
+        '200':
+          description: Lista de livros retornada com sucesso (pode ser vazia)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookDto'
+              examples:
+                with-books:
+                  summary: Estante com livros
+                  value:
+                    - id: 1
+                      title: "1984"
+                      author: "George Orwell"
+                      coverImageUrl: "https://covers.openlibrary.org/b/id/7222246-L.jpg"
+                      createdAt: "2025-10-23T10:00:00Z"
+                      review:
+                        id: 1
+                        rating: 5
+                        reviewText: "Obra-prima distópica!"
+                        createdAt: "2025-10-23T15:00:00Z"
+                        updatedAt: "2025-10-23T15:00:00Z"
+                    - id: 2
+                      title: "O Senhor dos Anéis"
+                      author: "J.R.R. Tolkien"
+                      coverImageUrl: null
+                      createdAt: "2025-10-23T11:30:00Z"
+                      review: null
+                empty-shelf:
+                  summary: Estante vazia
+                  value: []
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    post:
+      tags:
+        - Books
+      summary: Adicionar novo livro
+      description: Cria um novo livro na estante com título, autor e opcionalmente URL da capa
+      operationId: createBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookDto'
+            examples:
+              with-cover:
+                summary: Livro com capa
+                value:
+                  title: "1984"
+                  author: "George Orwell"
+                  coverImageUrl: "https://covers.openlibrary.org/b/id/7222246-L.jpg"
+              without-cover:
+                summary: Livro sem capa
+                value:
+                  title: "O Senhor dos Anéis"
+                  author: "J.R.R. Tolkien"
+                  coverImageUrl: null
+      responses:
+        '201':
+          description: Livro criado com sucesso
+          headers:
+            Location:
+              description: URI do livro criado
+              schema:
+                type: string
+                example: "/api/books/1"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDto'
+              example:
+                id: 1
+                title: "1984"
+                author: "George Orwell"
+                coverImageUrl: "https://covers.openlibrary.org/b/id/7222246-L.jpg"
+                createdAt: "2025-10-23T10:00:00Z"
+                review: null
+        '400':
+          description: Validação falhou (título/autor vazios ou excedendo limites)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                type: "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+                title: "One or more validation errors occurred."
+                status: 400
+                errors:
+                  Title: ["The Title field is required.", "The field Title must be a string with a maximum length of 200."]
+                  Author: ["The Author field is required."]
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /books/{id}:
+    get:
+      tags:
+        - Books
+      summary: Obter detalhes de um livro
+      description: Retorna informações completas de um livro específico, incluindo sua avaliação se existir
+      operationId: getBookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do livro
+          schema:
+            type: integer
+            minimum: 1
+          example: 1
+      responses:
+        '200':
+          description: Detalhes do livro retornados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDto'
+              examples:
+                with-review:
+                  summary: Livro com avaliação
+                  value:
+                    id: 1
+                    title: "1984"
+                    author: "George Orwell"
+                    coverImageUrl: "https://covers.openlibrary.org/b/id/7222246-L.jpg"
+                    createdAt: "2025-10-23T10:00:00Z"
+                    review:
+                      id: 1
+                      rating: 5
+                      reviewText: "Obra-prima distópica!"
+                      createdAt: "2025-10-23T15:00:00Z"
+                      updatedAt: "2025-10-23T15:00:00Z"
+                without-review:
+                  summary: Livro sem avaliação
+                  value:
+                    id: 2
+                    title: "O Senhor dos Anéis"
+                    author: "J.R.R. Tolkien"
+                    coverImageUrl: null
+                    createdAt: "2025-10-23T11:30:00Z"
+                    review: null
+        '404':
+          description: Livro não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                type: "https://tools.ietf.org/html/rfc7231#section-6.5.4"
+                title: "Not Found"
+                status: 404
+                detail: "Book with id 999 not found."
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /books/{id}/review:
+    post:
+      tags:
+        - Reviews
+      summary: Adicionar ou atualizar avaliação de um livro
+      description: |
+        Cria uma nova avaliação ou atualiza a existente para um livro específico.
+        - Se o livro não tem avaliação, cria uma nova (201 Created)
+        - Se o livro já tem avaliação, atualiza (200 OK)
+        - Rating é obrigatório (1-5 estrelas)
+        - ReviewText é opcional
+      operationId: addOrUpdateReview
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do livro a ser avaliado
+          schema:
+            type: integer
+            minimum: 1
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewDto'
+            examples:
+              full-review:
+                summary: Avaliação completa
+                value:
+                  rating: 5
+                  reviewText: "Obra-prima distópica que permanece relevante até hoje."
+              rating-only:
+                summary: Apenas nota (sem resenha)
+                value:
+                  rating: 4
+                  reviewText: null
+      responses:
+        '200':
+          description: Avaliação atualizada com sucesso (já existia)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewDto'
+              example:
+                id: 1
+                rating: 5
+                reviewText: "Obra-prima distópica que permanece relevante até hoje."
+                createdAt: "2025-10-23T15:00:00Z"
+                updatedAt: "2025-10-23T16:30:00Z"
+        '201':
+          description: Avaliação criada com sucesso (primeira avaliação do livro)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewDto'
+              example:
+                id: 1
+                rating: 5
+                reviewText: "Obra-prima distópica que permanece relevante até hoje."
+                createdAt: "2025-10-23T15:00:00Z"
+                updatedAt: "2025-10-23T15:00:00Z"
+        '400':
+          description: Validação falhou (rating fora do range 1-5 ou texto muito longo)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                type: "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+                title: "One or more validation errors occurred."
+                status: 400
+                errors:
+                  Rating: ["The field Rating must be between 1 and 5."]
+                  ReviewText: ["The field ReviewText must be a string with a maximum length of 2000."]
+        '404':
+          description: Livro não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                type: "https://tools.ietf.org/html/rfc7231#section-6.5.4"
+                title: "Not Found"
+                status: 404
+                detail: "Book with id 999 not found."
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    BookDto:
+      type: object
+      description: Representação completa de um livro com avaliação opcional
+      required:
+        - id
+        - title
+        - author
+        - createdAt
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Identificador único do livro
+          example: 1
+        title:
+          type: string
+          maxLength: 200
+          description: Título do livro
+          example: "1984"
+        author:
+          type: string
+          maxLength: 100
+          description: Nome do autor
+          example: "George Orwell"
+        coverImageUrl:
+          type: string
+          format: uri
+          maxLength: 500
+          nullable: true
+          description: URL pública da imagem da capa (opcional)
+          example: "https://covers.openlibrary.org/b/id/7222246-L.jpg"
+        createdAt:
+          type: string
+          format: date-time
+          description: Data/hora de adição do livro (ISO 8601 UTC)
+          example: "2025-10-23T10:00:00Z"
+        review:
+          $ref: '#/components/schemas/ReviewDto'
+          nullable: true
+          description: Avaliação do livro (null se não avaliado ainda)
+    
+    CreateBookDto:
+      type: object
+      description: Dados necessários para criar um novo livro
+      required:
+        - title
+        - author
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Título do livro (obrigatório)
+          example: "1984"
+        author:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Nome do autor (obrigatório)
+          example: "George Orwell"
+        coverImageUrl:
+          type: string
+          format: uri
+          maxLength: 500
+          nullable: true
+          description: URL pública da imagem da capa (opcional)
+          example: "https://covers.openlibrary.org/b/id/7222246-L.jpg"
+    
+    ReviewDto:
+      type: object
+      description: Representação completa de uma avaliação
+      required:
+        - id
+        - rating
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Identificador único da avaliação
+          example: 1
+        rating:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          description: Nota de 1 a 5 estrelas
+          example: 5
+        reviewText:
+          type: string
+          maxLength: 2000
+          nullable: true
+          description: Texto da resenha (opcional)
+          example: "Obra-prima distópica que permanece relevante até hoje."
+        createdAt:
+          type: string
+          format: date-time
+          description: Data/hora de criação da avaliação (ISO 8601 UTC)
+          example: "2025-10-23T15:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data/hora da última edição (ISO 8601 UTC)
+          example: "2025-10-23T16:30:00Z"
+    
+    CreateReviewDto:
+      type: object
+      description: Dados necessários para criar/atualizar uma avaliação
+      required:
+        - rating
+      properties:
+        rating:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          description: Nota de 1 a 5 estrelas (obrigatório)
+          example: 5
+        reviewText:
+          type: string
+          maxLength: 2000
+          nullable: true
+          description: Texto da resenha (opcional)
+          example: "Obra-prima distópica que permanece relevante até hoje."
+    
+    ErrorResponse:
+      type: object
+      description: Resposta de erro padrão (Problem Details RFC 7807)
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI identificando o tipo de erro
+          example: "https://tools.ietf.org/html/rfc7231#section-6.5.4"
+        title:
+          type: string
+          description: Título legível do erro
+          example: "Not Found"
+        status:
+          type: integer
+          format: int32
+          description: Código de status HTTP
+          example: 404
+        detail:
+          type: string
+          description: Explicação detalhada do erro
+          example: "Book with id 999 not found."
+    
+    ValidationErrorResponse:
+      type: object
+      description: Resposta de erro de validação (Problem Details + erros por campo)
+      required:
+        - type
+        - title
+        - status
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri
+          example: "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+        title:
+          type: string
+          example: "One or more validation errors occurred."
+        status:
+          type: integer
+          format: int32
+          example: 400
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: Dicionário de erros por campo
+          example:
+            Title: ["The Title field is required."]
+            Author: ["The Author field is required."]
