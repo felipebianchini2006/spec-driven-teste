@@ -17,21 +17,46 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: .NET 8.0 (or specify if .NET 9+) | ASP.NET Core
+**Primary Dependencies**: Entity Framework Core, xUnit, PostgreSQL (Npgsql provider) or NEEDS CLARIFICATION  
+**Storage**: PostgreSQL with EF Core or NEEDS CLARIFICATION  
+**Testing**: xUnit (unit), WebApplicationFactory (integration) or NEEDS CLARIFICATION  
+**Target Platform**: Cross-platform (.NET runtime) - Linux/Windows/macOS or NEEDS CLARIFICATION
+**Project Type**: web-api / web-api-blazor / multi-project-solution  
+**Performance Goals**: [domain-specific, e.g., <100ms API response p95, 1000 req/s or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., EF Core queries only, no raw SQL without justification or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 1000 concurrent users, 10 entities, 20 endpoints or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Stack Tecnológica (.NET 8+)**:
+- ✅ / ⚠️ Backend uses ASP.NET Core Web API (.NET 8+)
+- ✅ / ⚠️ Frontend uses Blazor (Server initially, API-independent)
+- ✅ / ⚠️ No usage of .NET Framework (legacy)
+
+**Persistência (EF Core + PostgreSQL)**:
+- ✅ / ⚠️ Entity Framework Core is the ORM
+- ✅ / ⚠️ PostgreSQL is the target database
+- ✅ / ⚠️ No direct database access from Blazor frontend
+
+**TDD (NON-NEGOTIABLE)**:
+- ✅ / ⚠️ Tests (xUnit) written BEFORE implementation
+- ✅ / ⚠️ Tests verified to FAIL before writing implementation code
+- ✅ / ⚠️ Integration tests for API endpoints using WebApplicationFactory
+
+**API Limpa (RESTful)**:
+- ✅ / ⚠️ API follows RESTful conventions
+- ✅ / ⚠️ Frontend ONLY accesses data through Web API
+- ✅ / ⚠️ API is stateless with proper HTTP status codes
+
+**Simplicidade (YAGNI)**:
+- ✅ / ⚠️ No features/abstractions beyond specification
+- ✅ / ⚠️ Complex patterns (Repository, UoW) justified if used
+- ✅ / ⚠️ Direct EF Core DbContext usage unless complexity documented
+
+*Mark ⚠️ if violated and document justification in "Complexity Tracking" section below*
 
 ## Project Structure
 
@@ -51,44 +76,52 @@ specs/[###-feature]/
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  real paths (e.g., src/Controllers/BooksController.cs). The delivered plan must
   not include Option labels.
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+# [REMOVE IF UNUSED] Option 1: Single ASP.NET Core project (DEFAULT for API-only or simple apps)
 src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+├── Controllers/      # API endpoints (ASP.NET Core Web API)
+├── Models/          # EF Core entities
+├── Services/        # Business logic layer
+├── Data/            # DbContext and configurations
+└── Program.cs       # Application entry point
 
 tests/
-├── contract/
-├── integration/
-└── unit/
+├── unit/            # xUnit unit tests for services/logic
+└── integration/     # WebApplicationFactory API integration tests
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+# [REMOVE IF UNUSED] Option 2: Separated Backend + Blazor Frontend
 backend/
 ├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
+│   ├── Controllers/     # ASP.NET Core Web API endpoints
+│   ├── Models/          # EF Core entities
+│   ├── Services/        # Business logic
+│   ├── Data/            # DbContext
+│   └── Program.cs
 └── tests/
+    ├── unit/
+    └── integration/
 
 frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+├── Components/          # Blazor components
+├── Pages/              # Blazor pages
+├── Services/           # HTTP clients to consume backend API
+└── Program.cs
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
+# [REMOVE IF UNUSED] Option 3: Multi-project solution (when multiple APIs or complex domains)
+src/
+├── EstanteVirtual.Api/        # Main Web API project
+├── EstanteVirtual.Domain/     # Domain models and business logic
+├── EstanteVirtual.Data/       # EF Core DbContext and repositories
+└── EstanteVirtual.Blazor/     # Blazor frontend project
 
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+tests/
+├── EstanteVirtual.Api.Tests/
+├── EstanteVirtual.Domain.Tests/
+└── EstanteVirtual.Integration.Tests/
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

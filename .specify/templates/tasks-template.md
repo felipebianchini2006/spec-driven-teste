@@ -8,7 +8,7 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Tests (TDD MANDATORY)**: Per constitution, ALL logic and API endpoints MUST have tests written FIRST. Tests must FAIL before implementation begins. Use xUnit for unit tests and WebApplicationFactory for API integration tests.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -20,9 +20,9 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- **Single ASP.NET Core project**: `src/`, `tests/` at repository root
+- **Separated backend + Blazor**: `backend/src/`, `frontend/` with Components/Pages
+- **Multi-project solution**: `src/ProjectName.Api/`, `src/ProjectName.Domain/`, `tests/ProjectName.Tests/`
 - Paths shown below assume single project - adjust based on plan.md structure
 
 <!-- 
@@ -48,9 +48,9 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T001 Create .NET solution and project structure per implementation plan
+- [ ] T002 Initialize ASP.NET Core Web API project with required NuGet packages (EF Core, Npgsql, xUnit)
+- [ ] T003 [P] Configure code analysis, formatting (.editorconfig, StyleCop if used)
 
 ---
 
@@ -62,12 +62,15 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T004 Create ASP.NET Core Web API project structure
+- [ ] T005 [P] Setup Entity Framework Core DbContext and initial configuration
+- [ ] T006 [P] Configure PostgreSQL connection and connection string management
+- [ ] T007 [P] Setup authentication/authorization middleware (if required)
+- [ ] T008 [P] Configure global error handling and exception filters
+- [ ] T009 [P] Setup structured logging (ILogger, Serilog, etc.)
+- [ ] T010 [P] Configure dependency injection container
+- [ ] T011 Setup xUnit test projects (unit and integration)
+- [ ] T012 Configure WebApplicationFactory for integration testing
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -79,21 +82,23 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 1 (TDD MANDATORY - Write FIRST) ✅
 
-> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+> **CRITICAL**: Per constitution Principle III, write these tests FIRST and ensure they FAIL before implementation
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T010 [P] [US1] Unit tests for [business logic/service] in tests/unit/[Name]Tests.cs (xUnit)
+- [ ] T011 [P] [US1] Integration test for [API endpoint] in tests/integration/[Controller]IntegrationTests.cs (WebApplicationFactory)
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T012 [P] [US1] Create [Entity1] EF Core entity in src/Models/[Entity1].cs
+- [ ] T013 [P] [US1] Create [Entity2] EF Core entity in src/Models/[Entity2].cs
+- [ ] T014 [US1] Add DbContext configuration for entities in src/Data/ApplicationDbContext.cs (depends on T012, T013)
+- [ ] T015 [US1] Create EF migration for new entities (dotnet ef migrations add)
+- [ ] T016 [US1] Implement [Service] business logic in src/Services/[Service].cs
+- [ ] T017 [US1] Implement [Controller] API endpoint in src/Controllers/[Controller].cs
+- [ ] T018 [US1] Add validation and error handling with proper HTTP status codes
+- [ ] T019 [US1] Add logging using ILogger<T> for user story 1 operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -105,17 +110,18 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 2 (TDD MANDATORY - Write FIRST) ✅
 
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T018 [P] [US2] Unit tests for [business logic/service] in tests/unit/[Name]Tests.cs (xUnit)
+- [ ] T019 [P] [US2] Integration test for [API endpoint] in tests/integration/[Controller]IntegrationTests.cs
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+- [ ] T020 [P] [US2] Create [Entity] EF Core entity in src/Models/[Entity].cs
+- [ ] T021 [US2] Add DbContext configuration and create migration
+- [ ] T022 [US2] Implement [Service] business logic in src/Services/[Service].cs
+- [ ] T023 [US2] Implement [Controller] API endpoint in src/Controllers/[Controller].cs
+- [ ] T024 [US2] Integrate with User Story 1 components (if needed)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -127,16 +133,17 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 3 (TDD MANDATORY - Write FIRST) ✅
 
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T024 [P] [US3] Unit tests for [business logic/service] in tests/unit/[Name]Tests.cs (xUnit)
+- [ ] T025 [P] [US3] Integration test for [API endpoint] in tests/integration/[Controller]IntegrationTests.cs
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T026 [P] [US3] Create [Entity] EF Core entity in src/Models/[Entity].cs
+- [ ] T027 [US3] Add DbContext configuration and create migration
+- [ ] T028 [US3] Implement [Service] business logic in src/Services/[Service].cs
+- [ ] T029 [US3] Implement [Controller] API endpoint in src/Controllers/[Controller].cs
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -198,13 +205,13 @@ Examples of foundational tasks (adjust based on your project):
 ## Parallel Example: User Story 1
 
 ```bash
-# Launch all tests for User Story 1 together (if tests requested):
-Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
-Task: "Integration test for [user journey] in tests/integration/test_[name].py"
+# Launch all tests for User Story 1 together (TDD - write these FIRST):
+Task: "Unit tests for [Service] in tests/unit/[Service]Tests.cs"
+Task: "Integration test for [Controller] in tests/integration/[Controller]IntegrationTests.cs"
 
-# Launch all models for User Story 1 together:
-Task: "Create [Entity1] model in src/models/[entity1].py"
-Task: "Create [Entity2] model in src/models/[entity2].py"
+# After tests fail (Red phase), launch models together:
+Task: "Create [Entity1] EF Core entity in src/Models/[Entity1].cs"
+Task: "Create [Entity2] EF Core entity in src/Models/[Entity2].cs"
 ```
 
 ---
