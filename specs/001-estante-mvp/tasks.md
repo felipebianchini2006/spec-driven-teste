@@ -28,20 +28,20 @@ description: "Task list for Estante Virtual MVP implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create .NET solution file EstanteVirtual.sln in repository root
-- [ ] T002 [P] Create EstanteVirtual.Data class library project in src/EstanteVirtual.Data/ targeting .NET 8.0
-- [ ] T003 [P] Create EstanteVirtual.Api Web API project in src/EstanteVirtual.Api/ targeting .NET 8.0
-- [ ] T004 [P] Create EstanteVirtual.Web Blazor Server project in src/EstanteVirtual.Web/ targeting .NET 8.0
-- [ ] T005 [P] Create EstanteVirtual.Api.Tests xUnit project in tests/EstanteVirtual.Api.Tests/ targeting .NET 8.0
-- [ ] T006 [P] Create EstanteVirtual.Data.Tests xUnit project in tests/EstanteVirtual.Data.Tests/ targeting .NET 8.0
-- [ ] T007 Add all projects to EstanteVirtual.sln solution file
-- [ ] T008 [P] Add NuGet packages to EstanteVirtual.Data: Microsoft.EntityFrameworkCore (8.0.0), Microsoft.EntityFrameworkCore.Design (8.0.0), Npgsql.EntityFrameworkCore.PostgreSQL (8.0.0)
-- [ ] T009 [P] Add project reference from EstanteVirtual.Api to EstanteVirtual.Data
-- [ ] T010 [P] Add NuGet package Swashbuckle.AspNetCore (6.5.0) to EstanteVirtual.Api for Swagger documentation
-- [ ] T011 [P] Add project reference from EstanteVirtual.Api.Tests to EstanteVirtual.Api
-- [ ] T012 [P] Add NuGet packages to EstanteVirtual.Api.Tests: Microsoft.AspNetCore.Mvc.Testing (8.0.0), Moq (4.20.70)
-- [ ] T013 [P] Add project reference from EstanteVirtual.Data.Tests to EstanteVirtual.Data
-- [ ] T014 [P] Configure .editorconfig for code style consistency in repository root
+- [X] T001 Create .NET solution file EstanteVirtual.sln in repository root
+- [X] T002 [P] Create EstanteVirtual.Data class library project in src/EstanteVirtual.Data/ targeting .NET 8.0
+- [X] T003 [P] Create EstanteVirtual.Api Web API project in src/EstanteVirtual.Api/ targeting .NET 8.0
+- [X] T004 [P] Create EstanteVirtual.Web Blazor Server project in src/EstanteVirtual.Web/ targeting .NET 8.0
+- [X] T005 [P] Create EstanteVirtual.Api.Tests xUnit project in tests/EstanteVirtual.Api.Tests/ targeting .NET 8.0
+- [X] T006 [P] Create EstanteVirtual.Data.Tests xUnit project in tests/EstanteVirtual.Data.Tests/ targeting .NET 8.0
+- [X] T007 Add all projects to EstanteVirtual.sln solution file
+- [X] T008 [P] Add NuGet packages to EstanteVirtual.Data: Microsoft.EntityFrameworkCore (8.0.0), Microsoft.EntityFrameworkCore.Design (8.0.0), Npgsql.EntityFrameworkCore.PostgreSQL (8.0.0)
+- [X] T009 [P] Add project reference from EstanteVirtual.Api to EstanteVirtual.Data
+- [X] T010 [P] Add NuGet package Swashbuckle.AspNetCore (6.5.0) to EstanteVirtual.Api for Swagger documentation
+- [X] T011 [P] Add project reference from EstanteVirtual.Api.Tests to EstanteVirtual.Api
+- [X] T012 [P] Add NuGet packages to EstanteVirtual.Api.Tests: Microsoft.AspNetCore.Mvc.Testing (8.0.0), Moq (4.20.70)
+- [X] T013 [P] Add project reference from EstanteVirtual.Data.Tests to EstanteVirtual.Data
+- [X] T014 [P] Configure .editorconfig for code style consistency in repository root
 
 ---
 
@@ -52,16 +52,16 @@ description: "Task list for Estante Virtual MVP implementation"
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 - [ ] T015 Create PostgreSQL database 'estantevirtual' (manual or via script)
-- [ ] T016 Configure connection string in EstanteVirtual.Api using User Secrets (dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=estantevirtual;Username=postgres;Password=<password>")
-- [ ] T017 Create AppDbContext class in src/EstanteVirtual.Data/Data/AppDbContext.cs inheriting from DbContext
-- [ ] T018 [P] Configure AppDbContext with DbSet<Book> Books and DbSet<Review> Reviews properties
-- [ ] T019 [P] Register AppDbContext in EstanteVirtual.Api/Program.cs with PostgreSQL provider
-- [ ] T020 [P] Configure Swagger/OpenAPI in EstanteVirtual.Api/Program.cs
-- [ ] T021 [P] Configure CORS in EstanteVirtual.Api/Program.cs to allow Blazor frontend
-- [ ] T022 [P] Configure global exception handling middleware in EstanteVirtual.Api/Program.cs
-- [ ] T023 [P] Configure IHttpClientFactory in EstanteVirtual.Web/Program.cs with API base URL
-- [ ] T024 Create WebApplicationFactory helper in tests/EstanteVirtual.Api.Tests/Helpers/TestWebApplicationFactory.cs for integration tests
-- [ ] T025 Configure test database (in-memory or test PostgreSQL instance) in TestWebApplicationFactory
+- [X] T016 Configure connection string in EstanteVirtual.Api using User Secrets (dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=estantevirtual;Username=postgres;Password=<password>")
+- [X] T017 Create AppDbContext class in src/EstanteVirtual.Data/Data/AppDbContext.cs inheriting from DbContext
+- [X] T018 [P] Configure AppDbContext with DbSet<Book> Books and DbSet<Review> Reviews properties
+- [X] T019 [P] Register AppDbContext in EstanteVirtual.Api/Program.cs with PostgreSQL provider
+- [X] T020 [P] Configure Swagger/OpenAPI in EstanteVirtual.Api/Program.cs
+- [X] T021 [P] Configure CORS in EstanteVirtual.Api/Program.cs to allow Blazor frontend
+- [X] T022 [P] Configure global exception handling middleware in EstanteVirtual.Api/Program.cs
+- [X] T023 [P] Configure IHttpClientFactory in EstanteVirtual.Web/Program.cs with API base URL
+- [X] T024 Create WebApplicationFactory helper in tests/EstanteVirtual.Api.Tests/Helpers/TestWebApplicationFactory.cs for integration tests
+- [X] T025 Configure test database (in-memory or test PostgreSQL instance) in TestWebApplicationFactory
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
