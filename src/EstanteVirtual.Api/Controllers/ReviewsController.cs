@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using EstanteVirtual.Api.DTOs;
 using EstanteVirtual.Data.Data;
 using EstanteVirtual.Data.Models;
-using EstanteVirtual.Api.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EstanteVirtual.Api.Controllers;
 
@@ -39,7 +39,7 @@ public class ReviewsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ReviewDto>> CreateOrUpdateReview(
-        int bookId, 
+        int bookId,
         [FromBody] CreateReviewDto createReviewDto)
     {
         _logger.LogInformation("Criando/atualizando review para livro ID: {BookId}", bookId);
@@ -47,7 +47,7 @@ public class ReviewsController : ControllerBase
         // Model validation é automática com [ApiController]
         if (!ModelState.IsValid)
         {
-            _logger.LogWarning("Validação falhou ao criar/atualizar review: {Errors}", 
+            _logger.LogWarning("Validação falhou ao criar/atualizar review: {Errors}",
                 string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
             return BadRequest(ModelState);
         }
@@ -60,7 +60,7 @@ public class ReviewsController : ControllerBase
         if (book == null)
         {
             _logger.LogWarning("Livro não encontrado: ID {BookId}", bookId);
-            return NotFound(new { message = $"Livro com ID {bookId} não encontrado." });
+            return NotFound();
         }
 
         Review review;
@@ -93,7 +93,7 @@ public class ReviewsController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Review {Action} com sucesso. ID: {ReviewId}", 
+        _logger.LogInformation("Review {Action} com sucesso. ID: {ReviewId}",
             isUpdate ? "atualizada" : "criada", review.Id);
 
         // Mapeia para DTO de resposta
@@ -113,8 +113,8 @@ public class ReviewsController : ControllerBase
         else
         {
             return CreatedAtAction(
-                nameof(GetReview), 
-                new { bookId = bookId }, 
+                nameof(GetReview),
+                new { bookId = bookId },
                 reviewDto);
         }
     }
@@ -134,12 +134,13 @@ public class ReviewsController : ControllerBase
         _logger.LogInformation("Buscando review do livro ID: {BookId}", bookId);
 
         var review = await _context.Reviews
+            .AsNoTracking()
             .FirstOrDefaultAsync(r => r.BookId == bookId);
 
         if (review == null)
         {
             _logger.LogWarning("Review não encontrada para livro ID: {BookId}", bookId);
-            return NotFound(new { message = $"Avaliação não encontrada para o livro com ID {bookId}." });
+            return NotFound();
         }
 
         var reviewDto = new ReviewDto

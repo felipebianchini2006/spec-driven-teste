@@ -1,5 +1,5 @@
-using EstanteVirtual.Data.Models;
 using EstanteVirtual.Data.Data;
+using EstanteVirtual.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EstanteVirtual.Data.Tests.Models;
@@ -111,7 +111,7 @@ public class BookTests
         var savedBook = await context.Books
             .Include(b => b.Review)
             .FirstOrDefaultAsync(b => b.Title == "The Pragmatic Programmer");
-        
+
         Assert.NotNull(savedBook);
         Assert.Null(savedBook.Review); // Novo livro não tem review
     }

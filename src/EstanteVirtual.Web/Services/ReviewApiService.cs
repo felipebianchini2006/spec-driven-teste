@@ -29,7 +29,7 @@ public class ReviewApiService
         try
         {
             _logger.LogInformation("Criando/atualizando review para livro ID: {BookId}", bookId);
-            
+
             var response = await _httpClient.PostAsJsonAsync($"api/books/{bookId}/review", createReviewDto);
 
             if (response.IsSuccessStatusCode)
@@ -41,7 +41,7 @@ public class ReviewApiService
             else
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Erro ao criar/atualizar review. Status: {Status}, Erro: {Error}", 
+                _logger.LogError("Erro ao criar/atualizar review. Status: {Status}, Erro: {Error}",
                     response.StatusCode, errorContent);
                 return null;
             }
@@ -73,9 +73,9 @@ public class ReviewApiService
         try
         {
             _logger.LogInformation("Buscando review do livro ID: {BookId}", bookId);
-            
+
             var review = await _httpClient.GetFromJsonAsync<ReviewDto>($"api/books/{bookId}/review");
-            
+
             if (review != null)
             {
                 _logger.LogInformation("Review encontrada. ID: {ReviewId}", review.Id);
@@ -84,7 +84,7 @@ public class ReviewApiService
             {
                 _logger.LogInformation("Nenhuma review encontrada para o livro ID: {BookId}", bookId);
             }
-            
+
             return review;
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)

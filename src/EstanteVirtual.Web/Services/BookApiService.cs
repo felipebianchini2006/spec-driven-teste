@@ -32,7 +32,7 @@ public class BookApiService
             _logger.LogInformation("Criando livro via API: {Title} por {Author}", title, author);
 
             var httpClient = _httpClientFactory.CreateClient("EstanteVirtualApi");
-            
+
             var createBookDto = new
             {
                 Title = title,
@@ -51,7 +51,7 @@ public class BookApiService
             else
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                _logger.LogWarning("Falha ao criar livro. Status: {StatusCode}, Erro: {Error}", 
+                _logger.LogWarning("Falha ao criar livro. Status: {StatusCode}, Erro: {Error}",
                     response.StatusCode, errorContent);
                 return null;
             }

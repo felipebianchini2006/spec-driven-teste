@@ -153,52 +153,52 @@ description: "Task list for Estante Virtual MVP implementation"
 
 ### Tests for User Story 3 (TDD MANDATORY - Write FIRST) ✅
 
-- [ ] T070 [P] [US3] Unit test for Review entity validation (rating required, range 1-5) in tests/EstanteVirtual.Data.Tests/Models/ReviewTests.cs
-- [ ] T071 [P] [US3] Unit test for Review entity validation (reviewText optional, max 2000 chars) in tests/EstanteVirtual.Data.Tests/Models/ReviewTests.cs
-- [ ] T072 [P] [US3] Unit test for Review entity BookId foreign key constraint in tests/EstanteVirtual.Data.Tests/Models/ReviewTests.cs
-- [ ] T073 [P] [US3] Integration test for GET /api/books/{id} returns book with review if exists in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T074 [P] [US3] Integration test for GET /api/books/{id} returns 404 when book doesn't exist in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T075 [P] [US3] Integration test for POST /api/books/{id}/review creates new review (returns 201) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
-- [ ] T076 [P] [US3] Integration test for POST /api/books/{id}/review updates existing review (returns 200) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
-- [ ] T077 [P] [US3] Integration test for POST /api/books/{id}/review without rating (returns 400) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
-- [ ] T078 [P] [US3] Integration test for POST /api/books/{id}/review with rating out of range (returns 400) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
+- [X] T070 [P] [US3] Unit test for Review entity validation (rating required, range 1-5) in tests/EstanteVirtual.Data.Tests/Models/ReviewTests.cs
+- [X] T071 [P] [US3] Unit test for Review entity validation (reviewText optional, max 2000 chars) in tests/EstanteVirtual.Data.Tests/Models/ReviewTests.cs
+- [X] T072 [P] [US3] Unit test for Review entity BookId foreign key constraint in tests/EstanteVirtual.Data.Tests/Models/ReviewTests.cs
+- [X] T073 [P] [US3] Integration test for GET /api/books/{id} returns book with review if exists in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T074 [P] [US3] Integration test for GET /api/books/{id} returns 404 when book doesn't exist in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T075 [P] [US3] Integration test for POST /api/books/{id}/review creates new review (returns 201) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
+- [X] T076 [P] [US3] Integration test for POST /api/books/{id}/review updates existing review (returns 200) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
+- [X] T077 [P] [US3] Integration test for POST /api/books/{id}/review without rating (returns 400) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
+- [X] T078 [P] [US3] Integration test for POST /api/books/{id}/review with rating out of range (returns 400) in tests/EstanteVirtual.Api.Tests/Controllers/ReviewsControllerTests.cs
 
 ### Implementation for User Story 3
 
-- [ ] T079 [P] [US3] Create Review entity class in src/EstanteVirtual.Data/Models/Review.cs with Id, BookId, Rating, ReviewText, CreatedAt, UpdatedAt properties
-- [ ] T080 [US3] Add Review navigation property to Book entity in src/EstanteVirtual.Data/Models/Book.cs
-- [ ] T081 [US3] Create ReviewConfiguration class in src/EstanteVirtual.Data/Data/EntityConfigurations/ReviewConfiguration.cs implementing IEntityTypeConfiguration<Review>
-- [ ] T082 [US3] Configure Review entity using Fluent API in ReviewConfiguration (primary key, foreign key to Book, unique constraint on BookId, required rating, max lengths)
-- [ ] T083 [US3] Configure one-to-zero-or-one relationship between Book and Review in BookConfiguration
-- [ ] T084 [US3] Apply ReviewConfiguration in AppDbContext.OnModelCreating method
-- [ ] T085 [US3] Create EF Core migration for Review entity (dotnet ef migrations add AddReviewEntity --project src/EstanteVirtual.Data --startup-project src/EstanteVirtual.Api)
-- [ ] T086 [US3] Apply migration to database (dotnet ef database update --project src/EstanteVirtual.Data --startup-project src/EstanteVirtual.Api)
-- [ ] T087 [P] [US3] Create ReviewDto class in src/EstanteVirtual.Api/DTOs/ReviewDto.cs with all Review properties
-- [ ] T088 [P] [US3] Create CreateReviewDto class in src/EstanteVirtual.Api/DTOs/CreateReviewDto.cs with Rating and ReviewText with validation attributes
-- [ ] T089 [US3] Implement GET /api/books/{id} endpoint in BooksController returning BookDto with 200 OK or 404 Not Found
-- [ ] T090 [US3] Include Review navigation property in GET /api/books/{id} query using EF Core
-- [ ] T091 [US3] Add logging for GET /api/books/{id} endpoint
-- [ ] T092 [US3] Create ReviewsController class in src/EstanteVirtual.Api/Controllers/ReviewsController.cs with AppDbContext injection
-- [ ] T093 [US3] Implement POST /api/books/{id}/review endpoint in ReviewsController accepting CreateReviewDto
-- [ ] T094 [US3] Check if book exists in POST /api/books/{id}/review endpoint (return 404 if not)
-- [ ] T095 [US3] Check if review already exists for book in POST /api/books/{id}/review endpoint
-- [ ] T096 [US3] Create new review if doesn't exist (return 201 Created) in POST /api/books/{id}/review endpoint
-- [ ] T097 [US3] Update existing review if exists (return 200 OK, update UpdatedAt) in POST /api/books/{id}/review endpoint
-- [ ] T098 [US3] Add model validation and error handling in POST /api/books/{id}/review endpoint
-- [ ] T099 [US3] Add logging using ILogger<ReviewsController> in POST /api/books/{id}/review endpoint
-- [ ] T100 [US3] Implement GetBookByIdAsync method in BookApiService calling GET /api/books/{id} endpoint
-- [ ] T101 [US3] Implement AddOrUpdateReviewAsync method in BookApiService calling POST /api/books/{id}/review endpoint
-- [ ] T102 [US3] Make BookCard component clickable (navigate to book details page) using NavigationManager
-- [ ] T103 [US3] Create BookDetails.razor page in src/EstanteVirtual.Web/Pages/BookDetails.razor with route @page "/books/{id:int}"
-- [ ] T104 [US3] Fetch book details on load in BookDetails.razor using BookApiService.GetBookByIdAsync
-- [ ] T105 [US3] Display book title, author and cover image in BookDetails.razor
-- [ ] T106 [US3] Display existing review (rating and text) in BookDetails.razor if book has review
-- [ ] T107 [US3] Create rating selector component (1-5 stars) in BookDetails.razor using radio buttons or star icons
-- [ ] T108 [US3] Create review text area in BookDetails.razor with max 2000 characters
-- [ ] T109 [US3] Add save button in BookDetails.razor wired to call BookApiService.AddOrUpdateReviewAsync
-- [ ] T110 [US3] Display success/error messages in BookDetails.razor after saving review
-- [ ] T111 [US3] Refresh book details after saving review to show updated data in BookDetails.razor
-- [ ] T112 [US3] Add validation to review form in BookDetails.razor (rating required, text optional)
+- [X] T079 [P] [US3] Create Review entity class in src/EstanteVirtual.Data/Models/Review.cs with Id, BookId, Rating, ReviewText, CreatedAt, UpdatedAt properties
+- [X] T080 [US3] Add Review navigation property to Book entity in src/EstanteVirtual.Data/Models/Book.cs
+- [X] T081 [US3] Create ReviewConfiguration class in src/EstanteVirtual.Data/Data/EntityConfigurations/ReviewConfiguration.cs implementing IEntityTypeConfiguration<Review>
+- [X] T082 [US3] Configure Review entity using Fluent API in ReviewConfiguration (primary key, foreign key to Book, unique constraint on BookId, required rating, max lengths)
+- [X] T083 [US3] Configure one-to-zero-or-one relationship between Book and Review in BookConfiguration
+- [X] T084 [US3] Apply ReviewConfiguration in AppDbContext.OnModelCreating method
+- [X] T085 [US3] Create EF Core migration for Review entity (dotnet ef migrations add AddReviewEntity --project src/EstanteVirtual.Data --startup-project src/EstanteVirtual.Api)
+- [X] T086 [US3] Apply migration to database (dotnet ef database update --project src/EstanteVirtual.Data --startup-project src/EstanteVirtual.Api)
+- [X] T087 [P] [US3] Create ReviewDto class in src/EstanteVirtual.Api/DTOs/ReviewDto.cs with all Review properties
+- [X] T088 [P] [US3] Create CreateReviewDto class in src/EstanteVirtual.Api/DTOs/CreateReviewDto.cs with Rating and ReviewText with validation attributes
+- [X] T089 [US3] Implement GET /api/books/{id} endpoint in BooksController returning BookDto with 200 OK or 404 Not Found
+- [X] T090 [US3] Include Review navigation property in GET /api/books/{id} query using EF Core
+- [X] T091 [US3] Add logging for GET /api/books/{id} endpoint
+- [X] T092 [US3] Create ReviewsController class in src/EstanteVirtual.Api/Controllers/ReviewsController.cs with AppDbContext injection
+- [X] T093 [US3] Implement POST /api/books/{id}/review endpoint in ReviewsController accepting CreateReviewDto
+- [X] T094 [US3] Check if book exists in POST /api/books/{id}/review endpoint (return 404 if not)
+- [X] T095 [US3] Check if review already exists for book in POST /api/books/{id}/review endpoint
+- [X] T096 [US3] Create new review if doesn't exist (return 201 Created) in POST /api/books/{id}/review endpoint
+- [X] T097 [US3] Update existing review if exists (return 200 OK, update UpdatedAt) in POST /api/books/{id}/review endpoint
+- [X] T098 [US3] Add model validation and error handling in POST /api/books/{id}/review endpoint
+- [X] T099 [US3] Add logging using ILogger<ReviewsController> in POST /api/books/{id}/review endpoint
+- [X] T100 [US3] Implement GetBookByIdAsync method in BookApiService calling GET /api/books/{id} endpoint
+- [X] T101 [US3] Implement AddOrUpdateReviewAsync method in BookApiService calling POST /api/books/{id}/review endpoint
+- [X] T102 [US3] Make BookCard component clickable (navigate to book details page) using NavigationManager
+- [X] T103 [US3] Create BookDetails.razor page in src/EstanteVirtual.Web/Pages/BookDetails.razor with route @page "/books/{id:int}"
+- [X] T104 [US3] Fetch book details on load in BookDetails.razor using BookApiService.GetBookByIdAsync
+- [X] T105 [US3] Display book title, author and cover image in BookDetails.razor
+- [X] T106 [US3] Display existing review (rating and text) in BookDetails.razor if book has review
+- [X] T107 [US3] Create rating selector component (1-5 stars) in BookDetails.razor using radio buttons or star icons
+- [X] T108 [US3] Create review text area in BookDetails.razor with max 2000 characters
+- [X] T109 [US3] Add save button in BookDetails.razor wired to call BookApiService.AddOrUpdateReviewAsync
+- [X] T110 [US3] Display success/error messages in BookDetails.razor after saving review
+- [X] T111 [US3] Refresh book details after saving review to show updated data in BookDetails.razor
+- [X] T112 [US3] Add validation to review form in BookDetails.razor (rating required, text optional)
 
 **Checkpoint**: All user stories should now be independently functional - Users can add books, view gallery, and add/edit reviews
 
@@ -208,18 +208,18 @@ description: "Task list for Estante Virtual MVP implementation"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T113 [P] Add XML documentation comments to all public API methods in BooksController and ReviewsController
-- [ ] T114 [P] Configure Swagger to include XML documentation in EstanteVirtual.Api/Program.cs
-- [ ] T115 [P] Add error boundary in Blazor app (src/EstanteVirtual.Web/App.razor) to handle unhandled exceptions
-- [ ] T116 [P] Add loading spinners/indicators in Blazor components during API calls
-- [ ] T117 [P] Optimize EF Core queries with AsNoTracking() for read-only operations
-- [ ] T118 [P] Add unit tests for DTOs validation attributes in tests/EstanteVirtual.Api.Tests/DTOs/
-- [ ] T119 [P] Add integration tests for CORS policy in tests/EstanteVirtual.Api.Tests/
-- [ ] T120 [P] Add integration tests for error handling middleware in tests/EstanteVirtual.Api.Tests/
-- [ ] T121 Code cleanup and remove unused using statements across all projects
-- [ ] T122 Performance testing with 100 books in database (verify <2s load time per success criteria)
-- [ ] T123 Run quickstart.md validation (follow setup guide end-to-end and verify all steps work)
-- [ ] T124 Update README.md with project overview, setup instructions and architecture diagram
+- [X] T113 [P] Add XML documentation comments to all public API methods in BooksController and ReviewsController
+- [X] T114 [P] Configure Swagger to include XML documentation in EstanteVirtual.Api/Program.cs
+- [X] T115 [P] Add error boundary in Blazor app (src/EstanteVirtual.Web/App.razor) to handle unhandled exceptions
+- [X] T116 [P] Add loading spinners/indicators in Blazor components during API calls
+- [X] T117 [P] Optimize EF Core queries with AsNoTracking() for read-only operations
+- [X] T118 [P] Add unit tests for DTOs validation attributes in tests/EstanteVirtual.Api.Tests/DTOs/
+- [X] T119 [P] Add integration tests for CORS policy in tests/EstanteVirtual.Api.Tests/
+- [X] T120 [P] Add integration tests for error handling middleware in tests/EstanteVirtual.Api.Tests/
+- [X] T121 Code cleanup and remove unused using statements across all projects
+- [X] T122 Performance testing with 100 books in database (verify <2s load time per success criteria)
+- [X] T123 Run quickstart.md validation (follow setup guide end-to-end and verify all steps work)
+- [X] T124 Update README.md with project overview, setup instructions and architecture diagram
 
 ---
 

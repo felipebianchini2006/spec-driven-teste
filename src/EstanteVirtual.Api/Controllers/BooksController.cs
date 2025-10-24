@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using EstanteVirtual.Api.DTOs;
 using EstanteVirtual.Data.Data;
 using EstanteVirtual.Data.Models;
-using EstanteVirtual.Api.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EstanteVirtual.Api.Controllers;
 
@@ -39,7 +39,7 @@ public class BooksController : ControllerBase
         // Model validation é automática com [ApiController]
         if (!ModelState.IsValid)
         {
-            _logger.LogWarning("Validação falhou ao criar livro: {Errors}", 
+            _logger.LogWarning("Validação falhou ao criar livro: {Errors}",
                 string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
             return BadRequest(ModelState);
         }
@@ -49,8 +49,8 @@ public class BooksController : ControllerBase
         {
             Title = createBookDto.Title.Trim(),
             Author = createBookDto.Author.Trim(),
-            CoverImageUrl = string.IsNullOrWhiteSpace(createBookDto.CoverImageUrl) 
-                ? null 
+            CoverImageUrl = string.IsNullOrWhiteSpace(createBookDto.CoverImageUrl)
+                ? null
                 : createBookDto.CoverImageUrl.Trim(),
             CreatedAt = DateTime.UtcNow
         };
@@ -74,8 +74,8 @@ public class BooksController : ControllerBase
 
         // Retorna 201 Created com Location header
         return CreatedAtAction(
-            nameof(GetBook), 
-            new { id = book.Id }, 
+            nameof(GetBook),
+            new { id = book.Id },
             bookDto);
     }
 
@@ -95,12 +95,13 @@ public class BooksController : ControllerBase
 
         var book = await _context.Books
             .Include(b => b.Review)
+            .AsNoTracking()
             .FirstOrDefaultAsync(b => b.Id == id);
 
         if (book == null)
         {
             _logger.LogWarning("Livro não encontrado: ID {BookId}", id);
-            return NotFound(new { message = $"Livro com ID {id} não encontrado." });
+            return NotFound();
         }
 
         var bookDto = new BookDto
@@ -136,6 +137,7 @@ public class BooksController : ControllerBase
 
         var books = await _context.Books
             .Include(b => b.Review)
+            .AsNoTracking()
             .OrderByDescending(b => b.CreatedAt)
             .ToListAsync();
 
