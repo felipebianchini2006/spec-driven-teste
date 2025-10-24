@@ -108,7 +108,7 @@ description: "Task list for Estante Virtual MVP implementation"
 - [X] T051 [US1] Display success/error messages in AddBookForm after submission
 - [X] T052 [US1] Add AddBookForm component to Home.razor page in src/EstanteVirtual.Web/Components/Pages/Home.razor
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - Users can add books to the shelf
+**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - Users can add books to the shelf ✅ COMPLETE
 
 ---
 
@@ -120,28 +120,28 @@ description: "Task list for Estante Virtual MVP implementation"
 
 ### Tests for User Story 2 (TDD MANDATORY - Write FIRST) ✅
 
-- [ ] T053 [P] [US2] Integration test for GET /api/books returns empty array when no books exist in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T054 [P] [US2] Integration test for GET /api/books returns all books after adding multiple in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T055 [P] [US2] Integration test for GET /api/books includes book with cover URL in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T056 [P] [US2] Integration test for GET /api/books includes book without cover URL (null) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T053 [P] [US2] Integration test for GET /api/books returns empty array when no books exist in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T054 [P] [US2] Integration test for GET /api/books returns all books after adding multiple in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T055 [P] [US2] Integration test for GET /api/books includes book with cover URL in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T056 [P] [US2] Integration test for GET /api/books includes book without cover URL (null) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
 
 ### Implementation for User Story 2
 
-- [ ] T057 [US2] Implement GET /api/books endpoint in BooksController returning List<BookDto> with 200 OK status
-- [ ] T058 [US2] Query all books from database using EF Core in GET /api/books endpoint (Include Review navigation property)
-- [ ] T059 [US2] Add logging for GET /api/books endpoint
-- [ ] T060 [US2] Implement GetAllBooksAsync method in BookApiService calling GET /api/books endpoint
-- [ ] T061 [US2] Create BookCard component in src/EstanteVirtual.Web/Components/BookCard.razor accepting Book parameter
-- [ ] T062 [US2] Display book cover image in BookCard component (use img tag with src from coverImageUrl)
-- [ ] T063 [US2] Display placeholder image in BookCard when coverImageUrl is null in src/EstanteVirtual.Web/wwwroot/images/book-placeholder.png
-- [ ] T064 [US2] Display book title below/over cover image in BookCard component
-- [ ] T065 [US2] Add CSS styling to BookCard component for grid layout and visual appeal
-- [ ] T066 [US2] Update Index.razor to fetch books on load using BookApiService.GetAllBooksAsync
-- [ ] T067 [US2] Display empty state message in Index.razor when no books exist ("Sua estante está vazia. Adicione seu primeiro livro!")
-- [ ] T068 [US2] Display grid of BookCard components in Index.razor when books exist
-- [ ] T069 [US2] Add CSS for responsive grid layout in Index.razor (grid-template-columns, gap)
+- [X] T057 [US2] Implement GET /api/books endpoint in BooksController returning List<BookDto> with 200 OK status
+- [X] T058 [US2] Query all books from database using EF Core in GET /api/books endpoint (Include Review navigation property)
+- [X] T059 [US2] Add logging for GET /api/books endpoint
+- [X] T060 [US2] Implement GetAllBooksAsync method in BookApiService calling GET /api/books endpoint
+- [X] T061 [US2] Create BookCard component in src/EstanteVirtual.Web/Components/BookCard.razor accepting Book parameter
+- [X] T062 [US2] Display book cover image in BookCard component (use img tag with src from coverImageUrl)
+- [X] T063 [US2] Display placeholder image in BookCard when coverImageUrl is null in src/EstanteVirtual.Web/wwwroot/images/book-placeholder.png
+- [X] T064 [US2] Display book title below/over cover image in BookCard component
+- [X] T065 [US2] Add CSS styling to BookCard component for grid layout and visual appeal
+- [X] T066 [US2] Update Home.razor to fetch books on load using BookApiService.GetAllBooksAsync
+- [X] T067 [US2] Display empty state message in Home.razor when no books exist ("Sua estante está vazia. Adicione seu primeiro livro!")
+- [X] T068 [US2] Display grid of BookCard components in Home.razor when books exist
+- [X] T069 [US2] Add CSS for responsive grid layout in Home.razor (grid-template-columns, gap)
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - Users can add books and see them in gallery
+**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - Users can add books and see them in gallery ✅ COMPLETE
 
 ---
 

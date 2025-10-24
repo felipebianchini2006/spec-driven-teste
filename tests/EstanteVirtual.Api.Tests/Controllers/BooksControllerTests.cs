@@ -276,4 +276,132 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
+
+    // ===== User Story 2 Tests - Visualizar Galeria de Livros =====
+
+    [Fact]
+    public async Task GET_Books_ReturnsEmptyArray_WhenNoBooksExist()
+    {
+        // Arrange
+        _factory.ResetDatabase();
+
+        // Act
+        var response = await _client.GetAsync("/api/books");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
+        
+        Assert.NotNull(books);
+        Assert.Empty(books);
+    }
+
+    [Fact]
+    public async Task GET_Books_ReturnsAllBooks_AfterAddingMultiple()
+    {
+        // Arrange
+        _factory.ResetDatabase();
+        
+        // Adiciona 3 livros
+        var book1 = new { Title = "Book 1", Author = "Author 1", CoverImageUrl = "https://example.com/1.jpg" };
+        var book2 = new { Title = "Book 2", Author = "Author 2", CoverImageUrl = "https://example.com/2.jpg" };
+        var book3 = new { Title = "Book 3", Author = "Author 3" }; // Sem capa
+        
+        await _client.PostAsJsonAsync("/api/books", book1);
+        await _client.PostAsJsonAsync("/api/books", book2);
+        await _client.PostAsJsonAsync("/api/books", book3);
+
+        // Act
+        var response = await _client.GetAsync("/api/books");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
+        
+        Assert.NotNull(books);
+        Assert.Equal(3, books.Length);
+        
+        // Verifica que todos os livros estão presentes
+        var titles = books.Select(b => b.GetProperty("title").GetString()).ToList();
+        Assert.Contains("Book 1", titles);
+        Assert.Contains("Book 2", titles);
+        Assert.Contains("Book 3", titles);
+    }
+
+    [Fact]
+    public async Task GET_Books_IncludesBookWithCoverUrl()
+    {
+        // Arrange
+        _factory.ResetDatabase();
+        var bookWithCover = new
+        {
+            Title = "Design Patterns",
+            Author = "Gang of Four",
+            CoverImageUrl = "https://example.com/designpatterns.jpg"
+        };
+        
+        await _client.PostAsJsonAsync("/api/books", bookWithCover);
+
+        // Act
+        var response = await _client.GetAsync("/api/books");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
+        
+        Assert.NotNull(books);
+        Assert.Single(books);
+        
+        var book = books[0];
+        Assert.Equal("Design Patterns", book.GetProperty("title").GetString());
+        Assert.Equal("Gang of Four", book.GetProperty("author").GetString());
+        Assert.Equal("https://example.com/designpatterns.jpg", book.GetProperty("coverImageUrl").GetString());
+    }
+
+    [Fact]
+    public async Task GET_Books_IncludesBookWithoutCoverUrl()
+    {
+        // Arrange
+        _factory.ResetDatabase();
+        var bookWithoutCover = new
+        {
+            Title = "Refactoring",
+            Author = "Martin Fowler"
+            // Sem CoverImageUrl
+        };
+        
+        await _client.PostAsJsonAsync("/api/books", bookWithoutCover);
+
+        // Act
+        var response = await _client.GetAsync("/api/books");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
+        
+        Assert.NotNull(books);
+        Assert.Single(books);
+        
+        var book = books[0];
+        Assert.Equal("Refactoring", book.GetProperty("title").GetString());
+        Assert.Equal("Martin Fowler", book.GetProperty("author").GetString());
+        
+        // Verifica que coverImageUrl é null
+        if (book.TryGetProperty("coverImageUrl", out var coverUrl))
+        {
+            Assert.Equal(JsonValueKind.Null, coverUrl.ValueKind);
+        }
+    }
 }
