@@ -30,6 +30,6 @@ public class AppDbContext : DbContext
 
         // Apply entity configurations using Fluent API
         modelBuilder.ApplyConfiguration(new BookConfiguration());
-        // modelBuilder.ApplyConfiguration(new ReviewConfiguration()); // Will be added in T081
+        modelBuilder.ApplyConfiguration(new ReviewConfiguration());
     }
 }

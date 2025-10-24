@@ -1,6 +1,6 @@
-@using EstanteVirtual.Web.Services
+@inject NavigationManager Navigation
 
-<div class="book-card">
+<div class="book-card" @onclick="@(() => Navigation.NavigateTo($"/books/{Book.Id}"))">
     @if (!string.IsNullOrEmpty(Book.CoverImageUrl))
     {
         <img src="@Book.CoverImageUrl" alt="@Book.Title" class="book-cover" onerror="this.src='/images/book-placeholder.png'" />
@@ -33,7 +33,7 @@
         else
         {
             <div class="book-no-review">
-                <small class="text-muted">Sem avaliação</small>
+                <small class="text-muted">Clique para avaliar</small>
             </div>
         }
     </div>

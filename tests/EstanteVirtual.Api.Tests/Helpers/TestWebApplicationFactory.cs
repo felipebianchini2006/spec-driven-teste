@@ -13,6 +13,8 @@ namespace EstanteVirtual.Api.Tests.Helpers;
 /// </summary>
 public class TestWebApplicationFactory : WebApplicationFactory<Program>
 {
+    private readonly string _databaseName = $"TestDatabase_{Guid.NewGuid()}";
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -26,10 +28,10 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
             }
 
-            // Add in-memory database for testing (T025)
+            // Add in-memory database for testing with unique name per test instance (T025)
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseInMemoryDatabase("TestDatabase");
+                options.UseInMemoryDatabase(_databaseName);
             });
 
             // Ensure database is created for each test

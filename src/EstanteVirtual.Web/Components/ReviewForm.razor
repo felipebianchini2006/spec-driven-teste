@@ -1,0 +1,182 @@
+@using EstanteVirtual.Web.DTOs
+@using EstanteVirtual.Web.Services
+@inject ReviewApiService ReviewApiService
+@inject ILogger<ReviewForm> Logger
+
+<div class="review-form">
+    <h4 class="mb-3">@(ExistingReview != null ? "Editar Avaliação" : "Adicionar Avaliação")</h4>
+    
+    <EditForm Model="@reviewModel" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        
+        <div class="mb-3">
+            <label class="form-label">Nota *</label>
+            <div class="rating-input">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    var starNumber = i; // Capture for lambda
+                    <button type="button" 
+                            class="btn btn-link p-0 star-button @(starNumber <= reviewModel.Rating ? "filled" : "empty")"
+                            @onclick="@(() => reviewModel.Rating = starNumber)"
+                            title="@starNumber estrela@(starNumber > 1 ? "s" : "")">
+                        <i class="bi bi-star-fill"></i>
+                    </button>
+                }
+            </div>
+            <ValidationMessage For="@(() => reviewModel.Rating)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="reviewText" class="form-label">Resenha (opcional)</label>
+            <InputTextArea id="reviewText" 
+                          @bind-Value="reviewModel.ReviewText" 
+                          class="form-control" 
+                          rows="5" 
+                          placeholder="Escreva sua opinião sobre o livro..." 
+                          maxlength="2000" />
+            <div class="form-text">@(reviewModel.ReviewText?.Length ?? 0) / 2000 caracteres</div>
+            <ValidationMessage For="@(() => reviewModel.ReviewText)" />
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @errorMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(successMessage))
+        {
+            <div class="alert alert-success" role="alert">
+                @successMessage
+            </div>
+        }
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                @if (isSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Salvando...</span>
+                }
+                else
+                {
+                    <span>@(ExistingReview != null ? "Atualizar Avaliação" : "Adicionar Avaliação")</span>
+                }
+            </button>
+            
+            @if (OnCancel.HasDelegate)
+            {
+                <button type="button" class="btn btn-secondary" @onclick="OnCancel" disabled="@isSubmitting">
+                    Cancelar
+                </button>
+            }
+        </div>
+    </EditForm>
+</div>
+
+<style>
+    .rating-input {
+        display: flex;
+        gap: 0.25rem;
+    }
+
+    .star-button {
+        font-size: 2rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: 0;
+        transition: transform 0.1s;
+    }
+
+    .star-button:hover {
+        transform: scale(1.1);
+    }
+
+    .star-button.filled {
+        color: #ffc107;
+    }
+
+    .star-button.empty {
+        color: #dee2e6;
+    }
+
+    .star-button:focus {
+        outline: 2px solid #0d6efd;
+        outline-offset: 2px;
+    }
+</style>
+
+@code {
+    [Parameter] public int BookId { get; set; }
+    [Parameter] public ReviewDto? ExistingReview { get; set; }
+    [Parameter] public EventCallback<ReviewDto> OnReviewSaved { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private CreateReviewDto reviewModel = new() { Rating = 0 };
+    private bool isSubmitting = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override void OnParametersSet()
+    {
+        // Se existe review, preenche o formulário
+        if (ExistingReview != null)
+        {
+            reviewModel = new CreateReviewDto
+            {
+                Rating = ExistingReview.Rating,
+                ReviewText = ExistingReview.ReviewText
+            };
+        }
+        else
+        {
+            reviewModel = new CreateReviewDto { Rating = 0 };
+        }
+
+        errorMessage = null;
+        successMessage = null;
+    }
+
+    private async Task HandleSubmit()
+    {
+        errorMessage = null;
+        successMessage = null;
+        isSubmitting = true;
+
+        try
+        {
+            Logger.LogInformation("Enviando review para livro ID: {BookId}, Rating: {Rating}", 
+                BookId, reviewModel.Rating);
+
+            var result = await ReviewApiService.CreateOrUpdateReviewAsync(BookId, reviewModel);
+
+            if (result != null)
+            {
+                successMessage = ExistingReview != null 
+                    ? "Avaliação atualizada com sucesso!" 
+                    : "Avaliação adicionada com sucesso!";
+                
+                Logger.LogInformation("Review salva com sucesso. ID: {ReviewId}", result.Id);
+                
+                // Notifica o componente pai
+                await OnReviewSaved.InvokeAsync(result);
+            }
+            else
+            {
+                errorMessage = "Erro ao salvar a avaliação. Tente novamente.";
+                Logger.LogWarning("Falha ao salvar review para livro ID: {BookId}", BookId);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Erro inesperado ao salvar a avaliação.";
+            Logger.LogError(ex, "Erro ao salvar review para livro ID: {BookId}", BookId);
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}
