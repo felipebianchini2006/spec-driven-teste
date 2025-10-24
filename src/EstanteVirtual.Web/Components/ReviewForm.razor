@@ -6,7 +6,10 @@
 <div class="review-form">
     <h4 class="mb-3">@(ExistingReview != null ? "Editar Avaliação" : "Adicionar Avaliação")</h4>
     
-    <EditForm Model="@reviewModel" OnValidSubmit="@HandleSubmit">
+    <EditForm Model="@reviewModel"
+              OnValidSubmit="@HandleSubmit"
+              FormName="@($"reviewForm_{BookId}")"
+              Method="FormMethod.Post">
         <DataAnnotationsValidator />
         
         <div class="mb-3">

@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using EstanteVirtual.Web.DTOs;
 
 namespace EstanteVirtual.Web.Services;
@@ -92,6 +91,53 @@ public class BookApiService
         {
             _logger.LogError(ex, "Exceção ao carregar livros: {Message}", ex.Message);
             return new List<BookDto>();
+        }
+    }
+
+    /// <summary>
+    /// Obtém um livro específico pelo ID.
+    /// </summary>
+    /// <param name="id">Identificador do livro.</param>
+    /// <returns>O livro encontrado ou null quando inexistente ou erro.</returns>
+    public async Task<BookDto?> GetBookByIdAsync(int id)
+    {
+        try
+        {
+            _logger.LogInformation("Carregando livro {BookId} via API", id);
+
+            var httpClient = _httpClientFactory.CreateClient("EstanteVirtualApi");
+            var response = await httpClient.GetAsync($"/api/books/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var book = await response.Content.ReadFromJsonAsync<BookDto>();
+                if (book != null)
+                {
+                    _logger.LogInformation("Livro {BookId} carregado com sucesso", id);
+                }
+                else
+                {
+                    _logger.LogWarning("Resposta da API não pôde ser desserializada ao buscar livro {BookId}", id);
+                }
+
+                return book;
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                _logger.LogWarning("Livro {BookId} não encontrado", id);
+                return null;
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogWarning("Falha ao carregar livro {BookId}. Status: {StatusCode}. Corpo: {Body}",
+                id, response.StatusCode, errorContent);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exceção ao carregar livro {BookId}: {Message}", id, ex.Message);
+            return null;
         }
     }
 }

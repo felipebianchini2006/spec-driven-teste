@@ -19,7 +19,7 @@
         <div class="alert alert-warning">
             <h4>Livro não encontrado</h4>
             <p>O livro que você está procurando não existe.</p>
-            <button class="btn btn-primary" @onclick="@(() => Navigation.NavigateTo("/"))">
+            <button type="button" class="btn btn-primary" @onclick="NavigateBack">
                 Voltar para a Estante
             </button>
         </div>
@@ -65,10 +65,11 @@
                 <div class="mt-4">
                     <ReviewForm BookId="@BookId" 
                                ExistingReview="@book.Review" 
-                               OnReviewSaved="@HandleReviewSaved" />
+                               OnReviewSaved="@HandleReviewSaved" 
+                               OnCancel="@NavigateBackAsync" />
                 </div>
 
-                <button class="btn btn-secondary mt-3" @onclick="@(() => Navigation.NavigateTo("/"))">
+                <button type="button" class="btn btn-secondary mt-3" @onclick="NavigateBack">
                     <i class="bi bi-arrow-left"></i> Voltar para a Estante
                 </button>
             </div>
@@ -93,11 +94,9 @@
         try
         {
             Logger.LogInformation("Carregando detalhes do livro ID: {BookId}", BookId);
-            
-            // Como não temos um endpoint GET /api/books/{id}, vamos buscar da lista
-            var books = await BookApiService.GetAllBooksAsync();
-            book = books.FirstOrDefault(b => b.Id == BookId);
-            
+
+            book = await BookApiService.GetBookByIdAsync(BookId);
+
             if (book == null)
             {
                 Logger.LogWarning("Livro não encontrado: ID {BookId}", BookId);
@@ -115,14 +114,20 @@
 
     private async Task HandleReviewSaved(ReviewDto savedReview)
     {
-        Logger.LogInformation("Review salva, atualizando visualização do livro");
-        
-        // Atualiza a review no objeto do livro
-        if (book != null)
+        Logger.LogInformation("Review salva, atualizando visualização do livro {BookId}", BookId);
+
+        var refreshedBook = await BookApiService.GetBookByIdAsync(BookId);
+        if (refreshedBook != null)
         {
-            book.Review = savedReview;
-            StateHasChanged();
+            book = refreshedBook;
         }
+        else if (book != null)
+        {
+            // fallback para manter review em caso de falha na API
+            book.Review = savedReview;
+        }
+
+        StateHasChanged();
     }
 
     private string GetBookCoverUrl(BookDto book)
@@ -130,5 +135,13 @@
         return string.IsNullOrWhiteSpace(book.CoverImageUrl) 
             ? "/images/book-placeholder.png" 
             : book.CoverImageUrl;
+    }
+
+    private void NavigateBack() => Navigation.NavigateTo("/", true);
+
+    private Task NavigateBackAsync()
+    {
+        NavigateBack();
+        return Task.CompletedTask;
     }
 }
