@@ -1,7 +1,29 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@using EstanteVirtual.Web.Services
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Estante Virtual - Minha Coleção</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">📚 Estante Virtual</h1>
+            <p class="lead">Organize sua coleção de livros e compartilhe suas opiniões!</p>
+        </div>
+    </div>
 
-Welcome to your new app.
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <AddBookForm OnBookAdded="HandleBookAdded" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private Task HandleBookAdded(BookDto book)
+    {
+        // Por enquanto, apenas log - futuramente recarregará a galeria
+        Console.WriteLine($"Livro adicionado: {book.Title}");
+        return Task.CompletedTask;
+    }
+}

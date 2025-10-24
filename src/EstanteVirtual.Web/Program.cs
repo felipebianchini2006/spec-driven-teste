@@ -14,6 +14,9 @@ builder.Services.AddHttpClient("EstanteVirtualApi", client =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
+// Register BookApiService (T046)
+builder.Services.AddScoped<EstanteVirtual.Web.Services.BookApiService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

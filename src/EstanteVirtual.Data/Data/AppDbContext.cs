@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using EstanteVirtual.Data.Models;
+using EstanteVirtual.Data.Data.EntityConfigurations;
 
 namespace EstanteVirtual.Data.Data;
 
@@ -28,8 +29,7 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // Apply entity configurations using Fluent API
-        // Configuration classes will be added in subsequent tasks (T035, T081)
-        // modelBuilder.ApplyConfiguration(new BookConfiguration());
-        // modelBuilder.ApplyConfiguration(new ReviewConfiguration());
+        modelBuilder.ApplyConfiguration(new BookConfiguration());
+        // modelBuilder.ApplyConfiguration(new ReviewConfiguration()); // Will be added in T081
     }
 }

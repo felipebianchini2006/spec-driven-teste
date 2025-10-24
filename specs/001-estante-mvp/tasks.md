@@ -77,36 +77,36 @@ description: "Task list for Estante Virtual MVP implementation"
 
 > **CRITICAL**: Per constitution Principle III, write these tests FIRST and ensure they FAIL before implementation
 
-- [ ] T026 [P] [US1] Unit test for Book entity validation (title required, max 200 chars) in tests/EstanteVirtual.Data.Tests/Models/BookTests.cs
-- [ ] T027 [P] [US1] Unit test for Book entity validation (author required, max 100 chars) in tests/EstanteVirtual.Data.Tests/Models/BookTests.cs
-- [ ] T028 [P] [US1] Unit test for Book entity validation (coverImageUrl optional, max 500 chars) in tests/EstanteVirtual.Data.Tests/Models/BookTests.cs
-- [ ] T029 [P] [US1] Integration test for POST /api/books with valid data (returns 201 Created) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T030 [P] [US1] Integration test for POST /api/books without title (returns 400 Bad Request) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T031 [P] [US1] Integration test for POST /api/books without author (returns 400 Bad Request) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T032 [P] [US1] Integration test for POST /api/books with cover URL (returns 201 and includes URL) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
-- [ ] T033 [P] [US1] Integration test for data persistence (add book, reload, verify exists) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T026 [P] [US1] Unit test for Book entity validation (title required, max 200 chars) in tests/EstanteVirtual.Data.Tests/Models/BookTests.cs
+- [X] T027 [P] [US1] Unit test for Book entity validation (author required, max 100 chars) in tests/EstanteVirtual.Data.Tests/Models/BookTests.cs
+- [X] T028 [P] [US1] Unit test for Book entity validation (coverImageUrl optional, max 500 chars) in tests/EstanteVirtual.Data.Tests/Models/BookTests.cs
+- [X] T029 [P] [US1] Integration test for POST /api/books with valid data (returns 201 Created) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T030 [P] [US1] Integration test for POST /api/books without title (returns 400 Bad Request) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T031 [P] [US1] Integration test for POST /api/books without author (returns 400 Bad Request) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T032 [P] [US1] Integration test for POST /api/books with cover URL (returns 201 and includes URL) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
+- [X] T033 [P] [US1] Integration test for data persistence (add book, reload, verify exists) in tests/EstanteVirtual.Api.Tests/Controllers/BooksControllerTests.cs
 
 ### Implementation for User Story 1
 
-- [ ] T034 [P] [US1] Create Book entity class in src/EstanteVirtual.Data/Models/Book.cs with Id, Title, Author, CoverImageUrl, CreatedAt properties
-- [ ] T035 [US1] Create BookConfiguration class in src/EstanteVirtual.Data/Data/EntityConfigurations/BookConfiguration.cs implementing IEntityTypeConfiguration<Book>
-- [ ] T036 [US1] Configure Book entity using Fluent API in BookConfiguration (primary key, required fields, max lengths, CreatedAt default)
-- [ ] T037 [US1] Apply BookConfiguration in AppDbContext.OnModelCreating method
+- [X] T034 [P] [US1] Create Book entity class in src/EstanteVirtual.Data/Models/Book.cs with Id, Title, Author, CoverImageUrl, CreatedAt properties
+- [X] T035 [US1] Create BookConfiguration class in src/EstanteVirtual.Data/Data/EntityConfigurations/BookConfiguration.cs implementing IEntityTypeConfiguration<Book>
+- [X] T036 [US1] Configure Book entity using Fluent API in BookConfiguration (primary key, required fields, max lengths, CreatedAt default)
+- [X] T037 [US1] Apply BookConfiguration in AppDbContext.OnModelCreating method
 - [ ] T038 [US1] Create EF Core migration for Book entity (dotnet ef migrations add AddBookEntity --project src/EstanteVirtual.Data --startup-project src/EstanteVirtual.Api)
 - [ ] T039 [US1] Apply migration to database (dotnet ef database update --project src/EstanteVirtual.Data --startup-project src/EstanteVirtual.Api)
-- [ ] T040 [P] [US1] Create BookDto class in src/EstanteVirtual.Api/DTOs/BookDto.cs with all Book properties plus Review property
-- [ ] T041 [P] [US1] Create CreateBookDto class in src/EstanteVirtual.Api/DTOs/CreateBookDto.cs with Title, Author, CoverImageUrl and validation attributes
-- [ ] T042 [US1] Create BooksController class in src/EstanteVirtual.Api/Controllers/BooksController.cs with AppDbContext injection
-- [ ] T043 [US1] Implement POST /api/books endpoint in BooksController accepting CreateBookDto and returning BookDto with 201 Created status
-- [ ] T044 [US1] Add model validation and error handling in POST /api/books endpoint (return 400 for invalid input)
-- [ ] T045 [US1] Add logging using ILogger<BooksController> in POST /api/books endpoint
-- [ ] T046 [US1] Create BookApiService class in src/EstanteVirtual.Web/Services/BookApiService.cs with HttpClient injection
-- [ ] T047 [US1] Implement CreateBookAsync method in BookApiService calling POST /api/books endpoint
-- [ ] T048 [US1] Create AddBookForm component in src/EstanteVirtual.Web/Components/AddBookForm.razor with title, author, coverUrl inputs
-- [ ] T049 [US1] Add validation to AddBookForm component (required fields, max lengths)
-- [ ] T050 [US1] Wire AddBookForm submit button to call BookApiService.CreateBookAsync
-- [ ] T051 [US1] Display success/error messages in AddBookForm after submission
-- [ ] T052 [US1] Add AddBookForm component to Index.razor page in src/EstanteVirtual.Web/Pages/Index.razor
+- [X] T040 [P] [US1] Create BookDto class in src/EstanteVirtual.Api/DTOs/BookDto.cs with all Book properties plus Review property
+- [X] T041 [P] [US1] Create CreateBookDto class in src/EstanteVirtual.Api/DTOs/CreateBookDto.cs with Title, Author, CoverImageUrl and validation attributes
+- [X] T042 [US1] Create BooksController class in src/EstanteVirtual.Api/Controllers/BooksController.cs with AppDbContext injection
+- [X] T043 [US1] Implement POST /api/books endpoint in BooksController accepting CreateBookDto and returning BookDto with 201 Created status
+- [X] T044 [US1] Add model validation and error handling in POST /api/books endpoint (return 400 for invalid input)
+- [X] T045 [US1] Add logging using ILogger<BooksController> in POST /api/books endpoint
+- [X] T046 [US1] Create BookApiService class in src/EstanteVirtual.Web/Services/BookApiService.cs with HttpClient injection
+- [X] T047 [US1] Implement CreateBookAsync method in BookApiService calling POST /api/books endpoint
+- [X] T048 [US1] Create AddBookForm component in src/EstanteVirtual.Web/Components/AddBookForm.razor with title, author, coverUrl inputs
+- [X] T049 [US1] Add validation to AddBookForm component (required fields, max lengths)
+- [X] T050 [US1] Wire AddBookForm submit button to call BookApiService.CreateBookAsync
+- [X] T051 [US1] Display success/error messages in AddBookForm after submission
+- [X] T052 [US1] Add AddBookForm component to Home.razor page in src/EstanteVirtual.Web/Components/Pages/Home.razor
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - Users can add books to the shelf
 
