@@ -404,4 +404,49 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
             Assert.Equal(JsonValueKind.Null, coverUrl.ValueKind);
         }
     }
+
+    // ===== User Story 3 Tests - Avaliar Livro =====
+
+    [Fact]
+    public async Task GET_BooksById_ReturnsBookWithReview_WhenReviewExists()
+    {
+        // Arrange
+        _factory.ResetDatabase();
+        
+        // Cria um livro
+        var newBook = new { Title = "Clean Architecture", Author = "Robert C. Martin" };
+        var createResponse = await _client.PostAsJsonAsync("/api/books", newBook);
+        var createdBook = await createResponse.Content.ReadFromJsonAsync<JsonElement>();
+        var bookId = createdBook.GetProperty("id").GetInt32();
+
+        // Adiciona uma review
+        var review = new { Rating = 5, ReviewText = "Excelente livro!" };
+        await _client.PostAsJsonAsync($"/api/books/{bookId}/review", review);
+
+        // Act
+        var response = await _client.GetAsync($"/api/books/{bookId}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        
+        var book = await response.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.True(book.TryGetProperty("review", out var reviewProp));
+        Assert.NotEqual(JsonValueKind.Null, reviewProp.ValueKind);
+        Assert.Equal(5, reviewProp.GetProperty("rating").GetInt32());
+        Assert.Equal("Excelente livro!", reviewProp.GetProperty("reviewText").GetString());
+    }
+
+    [Fact]
+    public async Task GET_BooksById_Returns404_WhenBookDoesNotExist()
+    {
+        // Arrange
+        _factory.ResetDatabase();
+        var nonExistentId = 9999;
+
+        // Act
+        var response = await _client.GetAsync($"/api/books/{nonExistentId}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }
