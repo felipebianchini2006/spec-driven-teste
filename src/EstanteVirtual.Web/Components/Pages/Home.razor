@@ -39,7 +39,7 @@
             else if (!books.Any())
             {
                 <div class="empty-state text-center py-5">
-                    <div class="mb-4" style="font-size: 4rem;">📚</div>
+                    <div class="empty-icon mb-4">📚</div>
                     <h3>Sua estante está vazia</h3>
                     <p class="text-muted">Adicione seu primeiro livro usando o formulário acima!</p>
                 </div>
@@ -82,25 +82,3 @@
         isLoading = false;
     }
 }
-
-<style>
-    .books-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
-    }
-
-    .empty-state {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 3rem;
-    }
-
-    @@media (max-width: 768px) {
-        .books-grid {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-    }
-</style>

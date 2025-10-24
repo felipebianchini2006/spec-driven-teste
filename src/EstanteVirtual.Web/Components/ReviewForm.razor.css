@@ -1,0 +1,51 @@
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.review-form h4 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.rating-input {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.35rem;
+}
+
+.star-button {
+    background: transparent;
+    border: none;
+    color: var(--bs-secondary-color);
+    cursor: pointer;
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    line-height: 1;
+    padding: 0;
+    transition: transform 0.1s ease, color 0.1s ease;
+}
+
+.star-button.filled {
+    color: var(--bs-warning);
+}
+
+.star-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.star-button:hover,
+.star-button:focus {
+    color: var(--bs-warning);
+    transform: scale(1.05);
+}
+
+.review-form textarea.form-control {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+.review-form .form-text {
+    color: var(--bs-secondary-color);
+}

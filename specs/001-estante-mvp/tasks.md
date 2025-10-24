@@ -395,3 +395,40 @@ Before marking feature complete:
 - [ ] API Swagger documentation complete and accurate
 
 **When all checked**: Feature ready for deployment 🚀
+
+---
+
+## Phase 7: Frontend CSS Refactoring (Clean & Minimalist)
+
+**Purpose**: Refatorar o CSS dos componentes Blazor para um visual limpo, minimalista, movendo estilos inline para arquivos `.razor.css` e aproveitando melhor o Bootstrap.
+
+- [x] T125 [P] Criar arquivo CSS com escopo para Home page em `src/EstanteVirtual.Web/Components/Pages/Home.razor.css`
+- [x] T126 [P] Criar arquivo CSS com escopo para BookCard em `src/EstanteVirtual.Web/Components/BookCard.razor.css`
+- [x] T127 [P] Criar arquivo CSS com escopo para ReviewForm em `src/EstanteVirtual.Web/Components/ReviewForm.razor.css`
+- [x] T128 Mover conteúdo da tag `<style>` de `src/EstanteVirtual.Web/Components/Pages/Home.razor` para `src/EstanteVirtual.Web/Components/Pages/Home.razor.css`
+- [x] T129 Mover conteúdo da tag `<style>` de `src/EstanteVirtual.Web/Components/BookCard.razor` para `src/EstanteVirtual.Web/Components/BookCard.razor.css`
+- [x] T130 Mover conteúdo da tag `<style>` de `src/EstanteVirtual.Web/Components/ReviewForm.razor` para `src/EstanteVirtual.Web/Components/ReviewForm.razor.css`
+- [x] T131 Remover a tag `<style>` e seu conteúdo do arquivo `src/EstanteVirtual.Web/Components/Pages/Home.razor`
+- [x] T132 Remover a tag `<style>` e seu conteúdo do arquivo `src/EstanteVirtual.Web/Components/BookCard.razor`
+- [x] T133 Remover a tag `<style>` e seu conteúdo do arquivo `src/EstanteVirtual.Web/Components/ReviewForm.razor`
+- [x] T134 Refatorar `src/EstanteVirtual.Web/Components/BookCard.razor.css`: Simplificar estilos, usar variáveis Bootstrap (`--bs-card-spacer-x`, `--bs-secondary-color`, `--bs-warning`), suavizar efeito hover, ajustar tipografia (título/autor) e espaçamento conforme sugestão minimalista.
+- [x] T135 Refatorar `src/EstanteVirtual.Web/Components/Pages/Home.razor.css`: Ajustar grid (`.books-grid`) e estado vazio (`.empty-state`) usando variáveis e classes Bootstrap para espaçamento e cores (`--bs-tertiary-bg`, `--bs-border-radius-lg`).
+- [x] T136 Refatorar `src/EstanteVirtual.Web/Components/ReviewForm.razor.css`: Otimizar estilos das estrelas (`.rating-input`, `.star-button`), usar variáveis Bootstrap para cores (`--bs-warning`, `--bs-secondary-color`). Considerar alternativas acessíveis se possível (ex: radio buttons estilizados).
+- [x] T137 [P] Revisar `src/EstanteVirtual.Web/Components/AddBookForm.razor` e `src/EstanteVirtual.Web/Components/Pages/BookDetails.razor`: Remover quaisquer estilos inline remanescentes e garantir uso consistente de classes Bootstrap para layout e espaçamento (`mb-3`, `mt-4`, etc.).
+- [x] T138 [P] Revisar `src/EstanteVirtual.Web/wwwroot/app.css`: Adicionar estilos globais mínimos se necessário (ex: `body` font-family) ou remover regras não utilizadas. Garantir que não conflita com estilos dos componentes.
+
+---
+
+## Validation Checklist (CSS Refactor)
+
+Antes de marcar a feature completa:
+
+- [ ] Todos os 14 tasks (T125-T138) completados
+- [ ] Tags `<style>` removidas dos arquivos `.razor` (`Home`, `BookCard`, `ReviewForm`)
+- [ ] Arquivos `.razor.css` existem para `Home`, `BookCard`, `ReviewForm` e contêm os estilos refatorados
+- [ ] Aplicação compilada e executada sem erros (`dotnet run --project src/EstanteVirtual.Web`)
+- [ ] Visual da aplicação está limpo, minimalista e consistente (verificar `Home`, `BookCard`, `BookDetails`, formulários)
+- [ ] Funcionalidades (adicionar livro, avaliar) continuam a funcionar corretamente
+- [ ] Responsividade da galeria de livros (`.books-grid`) verificada em diferentes tamanhos de tela
+
+**Quando todos checados**: Refatoração CSS completa ✅

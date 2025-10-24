@@ -3,19 +3,19 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inject BookApiService BookApiService
 
-<div class="add-book-form">
-    <h3>Adicionar Novo Livro</h3>
+<div class="add-book-form d-flex flex-column gap-3">
+    <h3 class="mb-2">Adicionar Novo Livro</h3>
 
     @if (!string.IsNullOrEmpty(successMessage))
     {
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success mb-0" role="alert">
             @successMessage
         </div>
     }
 
     @if (!string.IsNullOrEmpty(errorMessage))
     {
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger mb-0" role="alert">
             @errorMessage
         </div>
     }
