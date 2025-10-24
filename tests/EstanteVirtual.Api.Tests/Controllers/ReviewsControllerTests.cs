@@ -21,7 +21,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro primeiro
         var newBook = new { Title = "The Pragmatic Programmer", Author = "Andrew Hunt" };
         var bookResponse = await _client.PostAsJsonAsync("/api/books", newBook);
@@ -39,7 +39,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var review = await response.Content.ReadFromJsonAsync<JsonElement>();
         Assert.True(review.TryGetProperty("id", out var id));
         Assert.True(id.GetInt32() > 0);
@@ -52,7 +52,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro
         var newBook = new { Title = "Design Patterns", Author = "Gang of Four" };
         var bookResponse = await _client.PostAsJsonAsync("/api/books", newBook);
@@ -69,7 +69,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         var review = await response.Content.ReadFromJsonAsync<JsonElement>();
         Assert.Equal(5, review.GetProperty("rating").GetInt32());
         Assert.Equal("Review atualizada após releitura", review.GetProperty("reviewText").GetString());
@@ -80,7 +80,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro
         var newBook = new { Title = "Refactoring", Author = "Martin Fowler" };
         var bookResponse = await _client.PostAsJsonAsync("/api/books", newBook);
@@ -105,7 +105,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro
         var newBook = new { Title = "Test Book", Author = "Test Author" };
         var bookResponse = await _client.PostAsJsonAsync("/api/books", newBook);
@@ -130,7 +130,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro
         var newBook = new { Title = "Test Book", Author = "Test Author" };
         var bookResponse = await _client.PostAsJsonAsync("/api/books", newBook);
@@ -155,7 +155,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro
         var newBook = new { Title = "Test Book", Author = "Test Author" };
         var bookResponse = await _client.PostAsJsonAsync("/api/books", newBook);
@@ -173,7 +173,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var review = await response.Content.ReadFromJsonAsync<JsonElement>();
         Assert.Equal(4, review.GetProperty("rating").GetInt32());
     }
@@ -183,7 +183,7 @@ public class ReviewsControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro
         var newBook = new { Title = "Test Book", Author = "Test Author" };
         var bookResponse = await _client.PostAsJsonAsync("/api/books", newBook);

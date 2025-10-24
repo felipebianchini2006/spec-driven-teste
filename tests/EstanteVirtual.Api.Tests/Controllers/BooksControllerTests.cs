@@ -2,8 +2,8 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using EstanteVirtual.Api.Tests.Helpers;
-using Microsoft.Extensions.DependencyInjection;
 using EstanteVirtual.Data.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EstanteVirtual.Api.Tests.Controllers;
 
@@ -35,17 +35,17 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var createdBook = JsonSerializer.Deserialize<JsonElement>(responseContent, options);
-        
+
         Assert.True(createdBook.TryGetProperty("id", out var id));
         Assert.True(id.GetInt32() > 0);
         Assert.Equal("Clean Code", createdBook.GetProperty("title").GetString());
         Assert.Equal("Robert C. Martin", createdBook.GetProperty("author").GetString());
         Assert.Equal("https://example.com/cleancode.jpg", createdBook.GetProperty("coverImageUrl").GetString());
-        
+
         // Verifica Location header
         Assert.NotNull(response.Headers.Location);
         var locationHeader = response.Headers.Location.ToString();
@@ -68,7 +68,7 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         Assert.Contains("title", responseContent.ToLower());
     }
@@ -107,7 +107,7 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         Assert.Contains("author", responseContent.ToLower());
     }
@@ -147,11 +147,11 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var createdBook = JsonSerializer.Deserialize<JsonElement>(responseContent, options);
-        
+
         Assert.Equal("https://example.com/designpatterns.jpg", createdBook.GetProperty("coverImageUrl").GetString());
     }
 
@@ -171,11 +171,11 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var createdBook = JsonSerializer.Deserialize<JsonElement>(responseContent, options);
-        
+
         // Verifica se coverImageUrl é null ou não está presente
         if (createdBook.TryGetProperty("coverImageUrl", out var coverUrl))
         {
@@ -198,7 +198,7 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
         // Act - Adiciona o livro
         var postResponse = await _client.PostAsJsonAsync("/api/books", newBook);
         Assert.Equal(HttpStatusCode.Created, postResponse.StatusCode);
-        
+
         var postContent = await postResponse.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var createdBook = JsonSerializer.Deserialize<JsonElement>(postContent, options);
@@ -209,10 +209,10 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-        
+
         var getContent = await getResponse.Content.ReadAsStringAsync();
         var retrievedBook = JsonSerializer.Deserialize<JsonElement>(getContent, options);
-        
+
         Assert.Equal(bookId, retrievedBook.GetProperty("id").GetInt32());
         Assert.Equal("The Pragmatic Programmer", retrievedBook.GetProperty("title").GetString());
         Assert.Equal("Andrew Hunt and David Thomas", retrievedBook.GetProperty("author").GetString());
@@ -290,11 +290,11 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
-        
+
         Assert.NotNull(books);
         Assert.Empty(books);
     }
@@ -304,12 +304,12 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Adiciona 3 livros
         var book1 = new { Title = "Book 1", Author = "Author 1", CoverImageUrl = "https://example.com/1.jpg" };
         var book2 = new { Title = "Book 2", Author = "Author 2", CoverImageUrl = "https://example.com/2.jpg" };
         var book3 = new { Title = "Book 3", Author = "Author 3" }; // Sem capa
-        
+
         await _client.PostAsJsonAsync("/api/books", book1);
         await _client.PostAsJsonAsync("/api/books", book2);
         await _client.PostAsJsonAsync("/api/books", book3);
@@ -319,14 +319,14 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
-        
+
         Assert.NotNull(books);
         Assert.Equal(3, books.Length);
-        
+
         // Verifica que todos os livros estão presentes
         var titles = books.Select(b => b.GetProperty("title").GetString()).ToList();
         Assert.Contains("Book 1", titles);
@@ -345,7 +345,7 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
             Author = "Gang of Four",
             CoverImageUrl = "https://example.com/designpatterns.jpg"
         };
-        
+
         await _client.PostAsJsonAsync("/api/books", bookWithCover);
 
         // Act
@@ -353,14 +353,14 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
-        
+
         Assert.NotNull(books);
         Assert.Single(books);
-        
+
         var book = books[0];
         Assert.Equal("Design Patterns", book.GetProperty("title").GetString());
         Assert.Equal("Gang of Four", book.GetProperty("author").GetString());
@@ -378,7 +378,7 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
             Author = "Martin Fowler"
             // Sem CoverImageUrl
         };
-        
+
         await _client.PostAsJsonAsync("/api/books", bookWithoutCover);
 
         // Act
@@ -386,18 +386,18 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var books = JsonSerializer.Deserialize<JsonElement[]>(responseContent, options);
-        
+
         Assert.NotNull(books);
         Assert.Single(books);
-        
+
         var book = books[0];
         Assert.Equal("Refactoring", book.GetProperty("title").GetString());
         Assert.Equal("Martin Fowler", book.GetProperty("author").GetString());
-        
+
         // Verifica que coverImageUrl é null
         if (book.TryGetProperty("coverImageUrl", out var coverUrl))
         {
@@ -412,7 +412,7 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
     {
         // Arrange
         _factory.ResetDatabase();
-        
+
         // Cria um livro
         var newBook = new { Title = "Clean Architecture", Author = "Robert C. Martin" };
         var createResponse = await _client.PostAsJsonAsync("/api/books", newBook);
@@ -428,7 +428,7 @@ public class BooksControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         var book = await response.Content.ReadFromJsonAsync<JsonElement>();
         Assert.True(book.TryGetProperty("review", out var reviewProp));
         Assert.NotEqual(JsonValueKind.Null, reviewProp.ValueKind);

@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using EstanteVirtual.Data.Models;
 using EstanteVirtual.Data.Data.EntityConfigurations;
+using EstanteVirtual.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EstanteVirtual.Data.Data;
 

@@ -1,5 +1,5 @@
-using EstanteVirtual.Data.Models;
 using EstanteVirtual.Data.Data;
+using EstanteVirtual.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EstanteVirtual.Data.Tests.Models;
@@ -23,7 +23,7 @@ public class ReviewTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        
+
         // Primeiro cria um livro
         var book = new Book
         {
@@ -52,7 +52,7 @@ public class ReviewTests
         var savedReview = await context.Reviews
             .Include(r => r.Book)
             .FirstOrDefaultAsync(r => r.BookId == book.Id);
-        
+
         Assert.NotNull(savedReview);
         Assert.Equal(5, savedReview.Rating);
         Assert.Equal("Excelente livro sobre clean code!", savedReview.ReviewText);
@@ -65,7 +65,7 @@ public class ReviewTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        
+
         var book = new Book
         {
             Title = "Test Book",
@@ -88,7 +88,7 @@ public class ReviewTests
         // O InMemory DB não valida constraints, então apenas salvamos
         // A validação real será feita na camada de API
         await context.SaveChangesAsync();
-        
+
         var savedReview = await context.Reviews.FindAsync(review.Id);
         Assert.NotNull(savedReview);
     }
@@ -98,7 +98,7 @@ public class ReviewTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        
+
         var book = new Book
         {
             Title = "Test Book",
@@ -118,13 +118,13 @@ public class ReviewTests
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            
+
             context.Reviews.Add(review);
             await context.SaveChangesAsync();
-            
+
             var savedReview = await context.Reviews.FindAsync(review.Id);
             Assert.Equal(rating, savedReview!.Rating);
-            
+
             context.Reviews.Remove(review);
             await context.SaveChangesAsync();
         }
@@ -135,7 +135,7 @@ public class ReviewTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        
+
         var book = new Book
         {
             Title = "Test Book",
@@ -169,7 +169,7 @@ public class ReviewTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        
+
         var book = new Book
         {
             Title = "Test Book",
@@ -204,7 +204,7 @@ public class ReviewTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        
+
         var book = new Book
         {
             Title = "Test Book",
@@ -230,7 +230,7 @@ public class ReviewTests
         var savedReview = await context.Reviews
             .Include(r => r.Book)
             .FirstOrDefaultAsync(r => r.Id == review.Id);
-        
+
         Assert.NotNull(savedReview);
         Assert.Equal(book.Id, savedReview.BookId);
         Assert.NotNull(savedReview.Book);
@@ -242,7 +242,7 @@ public class ReviewTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        
+
         var book = new Book
         {
             Title = "Test Book",

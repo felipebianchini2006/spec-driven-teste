@@ -11,7 +11,20 @@
 </head>
 
 <body>
-    <Routes />
+    <ErrorBoundary>
+        <ChildContent>
+            <Routes />
+        </ChildContent>
+        <ErrorContent>
+            <div style="padding: 2rem; text-align: center;">
+                <h1 style="color: #dc3545;">❌ Erro</h1>
+                <p>Ocorreu um erro inesperado na aplicação.</p>
+                <button onclick="location.reload()" style="padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Recarregar Página
+                </button>
+            </div>
+        </ErrorContent>
+    </ErrorBoundary>
     <script src="_framework/blazor.web.js"></script>
 </body>
 
